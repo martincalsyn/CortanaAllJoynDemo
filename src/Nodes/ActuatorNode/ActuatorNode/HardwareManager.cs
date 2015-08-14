@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,10 @@ namespace ActuatorNode
         private void _button_Released(GTM.Button sender, object args)
         {
             if (this.ButtonPressed != null)
+            {
+                Debug.WriteLine("Button released");
                 this.ButtonPressed(this, new EventArgs());
+            }
         }
 
         public void SetButtonLed(bool state)

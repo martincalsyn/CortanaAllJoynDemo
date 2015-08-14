@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+using ServiceCore;
 
 namespace CortanaControlPoint
 {
@@ -22,9 +22,28 @@ namespace CortanaControlPoint
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private RelayNodeClient _relayClient;
+        private DispatcherTimer _timer;
+
         public MainPage()
         {
             this.InitializeComponent();
+            _relayClient = new RelayNodeClient();
+
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(3);
+            _timer.Tick += _timer_Tick;
+            _timer.Start();
         }
+
+        private int _stateSequence = 0;
+        private void _timer_Tick(object sender, object e)
+        {
+            _relayClient.SetRelay(0, (_stateSequence & 0x01) != 0);
+            _relayClient.SetRelay(1, (_stateSequence & 0x02) != 0);
+            if (++_stateSequence == 4)
+                _stateSequence = 0;
+        }
+
     }
 }
