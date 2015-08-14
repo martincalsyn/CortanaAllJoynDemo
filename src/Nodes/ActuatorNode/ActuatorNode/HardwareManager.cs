@@ -18,6 +18,7 @@ namespace ActuatorNode
         private GTM.FEZCream _mainboard;
         private GTM.Button _button;
         private PGTM.RelayX1[] _relays = new PGTM.RelayX1[2];
+        private bool[] _relayState = new bool[2] { false, false };
 
         public event ButtonPressedHandler ButtonPressed;
 
@@ -29,6 +30,8 @@ namespace ActuatorNode
             _relays[0] = await GT.Module.CreateAsync<PGTM.RelayX1>(_mainboard.GetProvidedSocket(4));
             _relays[1] = await GT.Module.CreateAsync<PGTM.RelayX1>(_mainboard.GetProvidedSocket(8));
             SetButtonLed(false);
+            SetRelay(0, false);
+            SetRelay(1, false);
         }
 
         private void _button_Released(GTM.Button sender, object args)
@@ -51,6 +54,7 @@ namespace ActuatorNode
                 throw new ArgumentOutOfRangeException("relay");
 
             _relays[relay].Value = state;
+            _relayState[relay] = state;
         }
 
         public bool GetRelayState(int relay)
@@ -58,7 +62,7 @@ namespace ActuatorNode
             if (relay < 0 || relay > 1)
                 throw new ArgumentOutOfRangeException("relay");
 
-            return _relays[relay].Value;
+            return _relayState[relay];
         }
     }
 }
