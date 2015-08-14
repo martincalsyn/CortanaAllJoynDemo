@@ -19,6 +19,7 @@ namespace ServiceCore
         private relaynodeWatcher _relayNodeWatcher;
         private AllJoynBusAttachment _bus;
         private bool[] _relayState = new bool[2];
+        private bool _fReady;
 
         public RelayNodeClient()
         {
@@ -26,6 +27,8 @@ namespace ServiceCore
             _bus = new AllJoynBusAttachment();
             StartWatcher();
         }
+
+        public bool IsReady { get { return _fReady; } }
 
         private void StartWatcher()
         {
@@ -36,7 +39,6 @@ namespace ServiceCore
 
         private async void relayNodeWatcher_Added(relaynodeWatcher sender, AllJoynServiceInfo args)
         {
-
             relaynodeJoinSessionResult joinResult = await relaynodeConsumer.JoinSessionAsync(args, sender);
 
             if (joinResult.Status == AllJoynStatus.Ok)
@@ -45,6 +47,7 @@ namespace ServiceCore
                 _relayNodeConsumer.Signals.ButtonPressedReceived += Signals_ButtonPressedReceived;
                 _relayNodeConsumer.Signals.RelayStateChangedReceived += Signals_RelayStateChangedReceived;
                 RetrieveCurrentState();
+                _fReady = true;
             }
             else
             {

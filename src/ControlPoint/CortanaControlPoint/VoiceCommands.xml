@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
+
+  <CommandSet xml:lang="en-us" Name="AdventureWorksCommandSet_en-us">
+    <CommandPrefix> Oasis, </CommandPrefix>
+    <Example> Show trip to London </Example>
+
+    <Command Name="turnOnItem">
+      <Example> Turn on </Example>
+      <ListenFor RequireAppName="BeforePhrase"> turn on [the] {target} </ListenFor>
+      <ListenFor RequireAppName="BeforePhrase"> activate [the] {target} </ListenFor>
+      <!--<ListenFor RequireAppName="ExplicitlySpecified"> show [my] {builtin:AppName} trip to {destination} </ListenFor>-->
+      <Feedback> Turning on the {target} </Feedback>
+      <VoiceCommandService Target="VoiceCommandService"/>
+    </Command>
+
+    <Command Name="turnOffItem">
+      <Example> Turn off </Example>
+      <ListenFor RequireAppName="BeforePhrase"> turn off [the] {target} </ListenFor>
+      <ListenFor RequireAppName="BeforePhrase"> shut off [the] {target} </ListenFor>
+      <!--<ListenFor RequireAppName="ExplicitlySpecified"> show [my] {builtin:AppName} trip to {destination} </ListenFor>-->
+      <Feedback> Turning off the {target} </Feedback>
+      <VoiceCommandService Target="VoiceCommandService"/>
+    </Command>
+
+    <PhraseList Label="target">
+      <Item>light</Item>
+      <Item>lamp</Item>
+      <Item>fan</Item>
+    </PhraseList>
+  </CommandSet>
+
+</VoiceCommands>

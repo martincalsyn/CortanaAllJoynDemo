@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -38,7 +39,7 @@ namespace CortanaControlPoint
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
 
 #if DEBUG
@@ -77,6 +78,26 @@ namespace CortanaControlPoint
             }
             // Ensure the current window is active
             Window.Current.Activate();
+
+            try
+            {
+                // Install the main VCD. Since there's no simple way to test that the VCD has been imported, or that it's your most recent
+                // version, it's not unreasonable to do this upon app load.
+                StorageFile vcdStorageFile = await Package.Current.InstalledLocation.GetFileAsync(@"VoiceCommands.xml");
+
+                await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(vcdStorageFile);
+
+                //// Update phrase list.
+                //ViewModel.ViewModelLocator locator = App.Current.Resources["ViewModelLocator"] as ViewModel.ViewModelLocator;
+                //if (locator != null)
+                //{
+                //    await locator.TripViewModel.UpdateDestinationPhraseList();
+                //}
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Installing Voice Commands Failed: " + ex.ToString());
+            }
         }
 
         /// <summary>
