@@ -110,6 +110,83 @@ void relaynodeSetStateCalledEventArgs::InvokeCompleteHandler()
     }
 }
 
+relaynodeGetStateCalledEventArgs::relaynodeGetStateCalledEventArgs(
+    _In_ AllJoynMessageInfo^ info,
+    _In_ int32 interfaceMemberRelayId)
+    : m_raised(false),
+    m_completionsRequired(0),
+    m_messageInfo(info),
+    m_interfaceMemberRelayId(interfaceMemberRelayId)
+{
+	m_result = relaynodeGetStateResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
+}
+
+Deferral^ relaynodeGetStateCalledEventArgs::GetDeferral()
+{
+    std::lock_guard<std::mutex> lockGuard(m_lock);
+    if (m_raised)
+    {
+        // Cannot ask for a deferral after the event handler has returned.
+        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+    }
+
+    m_completionsRequired++;
+    auto handler = ref new DeferralCompletedHandler(this, &relaynodeGetStateCalledEventArgs::Complete);
+    return ref new Deferral(handler);
+}
+
+void relaynodeGetStateCalledEventArgs::InvokeAllFinished()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        m_raised = true;
+        invokeNeeded = (m_completionsRequired == 0);
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void relaynodeGetStateCalledEventArgs::Complete()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        if (m_completionsRequired == 0)
+        {
+            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
+            // which will only invoke our completion handler once.
+            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+        }
+        m_completionsRequired--;
+        invokeNeeded = (m_raised && (m_completionsRequired == 0));
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void relaynodeGetStateCalledEventArgs::InvokeCompleteHandler()
+{
+    if (m_result->Status == ER_NOT_IMPLEMENTED)
+    {
+        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for GetStateCalled.");
+    }
+    else
+    {
+        m_tce.set(m_result);
+    }
+}
+
 // Readable Properties
 // Writable Properties
 } } } } 

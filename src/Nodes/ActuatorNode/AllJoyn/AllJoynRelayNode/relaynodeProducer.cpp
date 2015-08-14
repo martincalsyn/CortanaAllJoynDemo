@@ -198,6 +198,56 @@ void relaynodeProducer::CallSetStateHandler(_Inout_ alljoyn_busobject busObject,
     }
 }
 
+void relaynodeProducer::CallGetStateHandler(_Inout_ alljoyn_busobject busObject, _In_ alljoyn_message message)
+{
+    auto source = SourceObjects.find(busObject);
+    if (source == SourceObjects.end())
+    {
+        return;
+    }
+
+    relaynodeProducer^ producer = source->second->Resolve<relaynodeProducer>();
+    if (producer->Service != nullptr)
+    {
+        AllJoynMessageInfo^ callInfo = ref new AllJoynMessageInfo(AllJoynHelpers::MultibyteToPlatformString(alljoyn_message_getsender(message)));
+
+        int32 inputArg0;
+        TypeConversionHelpers::GetAllJoynMessageArg(alljoyn_message_getarg(message, 0), "i", &inputArg0);
+
+        create_task(producer->Service->GetStateAsync(callInfo, inputArg0)).then([busObject, message](relaynodeGetStateResult^ result)
+        {
+            int32 status;
+
+            if (nullptr == result)
+            {
+                alljoyn_busobject_methodreply_status(busObject, message, ER_BUS_NO_LISTENER);
+                return;
+            }
+
+            status = result->Status;
+            if (AllJoynStatus::Ok != status)
+            {
+                alljoyn_busobject_methodreply_status(busObject, message, static_cast<QStatus>(status));
+                return;
+            }
+
+            size_t argCount = 1;
+            alljoyn_msgarg outputs = alljoyn_msgarg_array_create(argCount);
+
+            status = TypeConversionHelpers::SetAllJoynMessageArg(alljoyn_msgarg_array_element(outputs, 0), "y", result->State);
+            if (AllJoynStatus::Ok != status)
+            {
+                alljoyn_busobject_methodreply_status(busObject, message, static_cast<QStatus>(status));
+                alljoyn_msgarg_destroy(outputs);
+                return;
+            }
+
+            alljoyn_busobject_methodreply_args(busObject, message, outputs, argCount);
+            alljoyn_msgarg_destroy(outputs);
+        }).wait();
+    }
+}
+
 void relaynodeProducer::CallButtonPressedSignalHandler(_In_ const alljoyn_interfacedescription_member* member, _In_ alljoyn_message message)
 {
     auto source = SourceInterfaces.find(member->iface);
@@ -215,6 +265,32 @@ void relaynodeProducer::CallButtonPressedSignalHandler(_In_ const alljoyn_interf
 
 
         producer->Signals->CallButtonPressedReceived(producer->Signals, eventArgs);
+    }
+}
+
+void relaynodeProducer::CallRelayStateChangedSignalHandler(_In_ const alljoyn_interfacedescription_member* member, _In_ alljoyn_message message)
+{
+    auto source = SourceInterfaces.find(member->iface);
+    if (source == SourceInterfaces.end())
+    {
+        return;
+    }
+
+    auto producer = source->second->Resolve<relaynodeProducer>();
+    if (producer->Signals != nullptr)
+    {
+        auto callInfo = ref new AllJoynMessageInfo(AllJoynHelpers::MultibyteToPlatformString(alljoyn_message_getsender(message)));
+        auto eventArgs = ref new relaynodeRelayStateChangedReceivedEventArgs();
+        eventArgs->MessageInfo = callInfo;
+
+        int32 argument0;
+        TypeConversionHelpers::GetAllJoynMessageArg(alljoyn_message_getarg(message, 0), "i", &argument0);
+        eventArgs->RelayId = argument0;
+        byte argument1;
+        TypeConversionHelpers::GetAllJoynMessageArg(alljoyn_message_getarg(message, 1), "y", &argument1);
+        eventArgs->State = argument1;
+
+        producer->Signals->CallRelayStateChangedReceived(producer->Signals, eventArgs);
     }
 }
 
@@ -303,11 +379,31 @@ void relaynodeProducer::Start()
         return;
     }
 
+    result = AddMethodHandler(
+        interfaceDescription, 
+        "GetState", 
+        [](alljoyn_busobject busObject, const alljoyn_interfacedescription_member* member, alljoyn_message message) { UNREFERENCED_PARAMETER(member); CallGetStateHandler(busObject, message); });
+    if (result != ER_OK)
+    {
+        StopInternal(result);
+        return;
+    }
+
     result = AddSignalHandler(
         AllJoynHelpers::GetInternalBusAttachment(m_busAttachment),
         interfaceDescription,
         "ButtonPressed",
         [](const alljoyn_interfacedescription_member* member, PCSTR srcPath, alljoyn_message message) { UNREFERENCED_PARAMETER(srcPath); CallButtonPressedSignalHandler(member, message); });
+    if (result != ER_OK)
+    {
+        StopInternal(result);
+        return;
+    }
+    result = AddSignalHandler(
+        AllJoynHelpers::GetInternalBusAttachment(m_busAttachment),
+        interfaceDescription,
+        "RelayStateChanged",
+        [](const alljoyn_interfacedescription_member* member, PCSTR srcPath, alljoyn_message message) { UNREFERENCED_PARAMETER(srcPath); CallRelayStateChangedSignalHandler(member, message); });
     if (result != ER_OK)
     {
         StopInternal(result);
@@ -385,8 +481,17 @@ PCSTR digital::pervasive::sample::relaynode::c_relaynodeIntrospectionXml = "<int
 "    <arg name=\"relayId\" type=\"i\" direction=\"in\" />"
 "    <arg name=\"state\" type=\"y\" direction=\"in\" />"
 "  </method>"
+"  <method name=\"GetState\">"
+"    <arg name=\"relayId\" type=\"i\" direction=\"in\" />"
+"    <arg name=\"state\" type=\"y\" direction=\"out\" />"
+"  </method>"
 "  <signal name=\"ButtonPressed\" sessless=\"true\">"
 "    <description>Emitted when the node's button has been pressed</description>"
+"  </signal>"
+"  <signal name=\"RelayStateChanged\" sessless=\"true\">"
+"    <description>Emitted when the relay state changes</description>"
+"    <arg name=\"relayId\" type=\"i\" />"
+"    <arg name=\"state\" type=\"y\" />"
 "  </signal>"
 "</interface>"
 ;

@@ -39,5 +39,34 @@ private:
 
 };
 
+public ref class relaynodeRelayStateChangedReceivedEventArgs sealed
+{
+public:
+    property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
+    {
+        Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
+        void set(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ value) { m_messageInfo = value; }
+    }
+
+    property int32 RelayId
+    {
+        int32 get() { return m_interfaceMemberRelayId; }
+    internal:
+        void set(_In_ int32 value) { m_interfaceMemberRelayId = value; }
+    }
+    property byte State
+    {
+        byte get() { return m_interfaceMemberState; }
+    internal:
+        void set(_In_ byte value) { m_interfaceMemberState = value; }
+    }
+
+private:
+    Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
+
+    int32 m_interfaceMemberRelayId;
+    byte m_interfaceMemberState;
+};
+
 
 } } } } 

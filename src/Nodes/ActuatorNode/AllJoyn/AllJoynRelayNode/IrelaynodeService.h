@@ -29,6 +29,9 @@ public:
     // Implement this function to handle calls to the SetState method.
     Windows::Foundation::IAsyncOperation<relaynodeSetStateResult^>^ SetStateAsync(Windows::Devices::AllJoyn::AllJoynMessageInfo^ info , _In_ int32 interfaceMemberRelayId, _In_ byte interfaceMemberState);
 
+    // Implement this function to handle calls to the GetState method.
+    Windows::Foundation::IAsyncOperation<relaynodeGetStateResult^>^ GetStateAsync(Windows::Devices::AllJoyn::AllJoynMessageInfo^ info , _In_ int32 interfaceMemberRelayId);
+
 };
 
 } } } } 

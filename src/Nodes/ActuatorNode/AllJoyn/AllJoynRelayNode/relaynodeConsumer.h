@@ -44,6 +44,8 @@ public:
 
     // Call the SetState method
     Windows::Foundation::IAsyncOperation<relaynodeSetStateResult^>^ SetStateAsync(_In_ int32 interfaceMemberRelayId, _In_ byte interfaceMemberState);
+    // Call the GetState method
+    Windows::Foundation::IAsyncOperation<relaynodeGetStateResult^>^ GetStateAsync(_In_ int32 interfaceMemberRelayId);
 
     // Used to send signals or register functions to handle received signals.
     property relaynodeSignals^ Signals
@@ -117,6 +119,7 @@ private:
     QStatus AddSignalHandler(_In_ alljoyn_busattachment busAttachment, _In_ alljoyn_interfacedescription interfaceDescription, _In_ PCSTR methodName, _In_ alljoyn_messagereceiver_signalhandler_ptr handler);
 
     static void CallButtonPressedSignalHandler(_In_ const alljoyn_interfacedescription_member* member, _In_ alljoyn_message message);
+    static void CallRelayStateChangedSignalHandler(_In_ const alljoyn_interfacedescription_member* member, _In_ alljoyn_message message);
     
     Windows::Devices::AllJoyn::AllJoynBusAttachment^ m_busAttachment;
     relaynodeSignals^ m_signals;

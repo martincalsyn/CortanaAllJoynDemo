@@ -23,8 +23,9 @@ namespace ActuatorNode
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private HardwareManager _hw;
-        private DispatcherTimer _timer;
+        private HardwareManager _hm;
+        //private DispatcherTimer _timer;
+        private RelayServer _relayServer;
 
         public MainPage()
         {
@@ -40,23 +41,25 @@ namespace ActuatorNode
 
         private async Task InitializeHardware()
         {
-            _hw = new HardwareManager();
-            await _hw.Initialize();
+            _hm = new HardwareManager();
+            await _hm.Initialize();
 
-            _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(0.5);
-            _timer.Tick += _timer_Tick;
-            _timer.Start();
+            _relayServer = new RelayServer(_hm);
+
+            //_timer = new DispatcherTimer();
+            //_timer.Interval = TimeSpan.FromSeconds(0.5);
+            //_timer.Tick += _timer_Tick;
+            //_timer.Start();
         }
 
-        private int _stateSequence = 0;
-        private void _timer_Tick(object sender, object e)
-        {
-            _hw.SetRelay(0, (_stateSequence & 0x01) != 0);
-            _hw.SetRelay(1, (_stateSequence & 0x02) != 0);
-            if (++_stateSequence == 4)
-                _stateSequence = 0;
-        }
+        //private int _stateSequence = 0;
+        //private void _timer_Tick(object sender, object e)
+        //{
+        //    _hw.SetRelay(0, (_stateSequence & 0x01) != 0);
+        //    _hw.SetRelay(1, (_stateSequence & 0x02) != 0);
+        //    if (++_stateSequence == 4)
+        //        _stateSequence = 0;
+        //}
 
     }
 }

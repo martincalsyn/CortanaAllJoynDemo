@@ -34,6 +34,7 @@ void relaynodeSignals::Initialize(_In_ alljoyn_busobject busObject, _In_ alljoyn
 
     auto interfaceDefinition = alljoyn_busattachment_getinterface(alljoyn_busobject_getbusattachment(busObject), "digital.pervasive.sample.relaynode");
     alljoyn_interfacedescription_getmember(interfaceDefinition, "ButtonPressed", &m_memberButtonPressed);
+    alljoyn_interfacedescription_getmember(interfaceDefinition, "RelayStateChanged", &m_memberRelayStateChanged);
 }
 
 void relaynodeSignals::ButtonPressed()
@@ -64,6 +65,39 @@ void relaynodeSignals::CallButtonPressedReceived(_In_ relaynodeSignals^ sender, 
 {
     AllJoynHelpers::DispatchEvent([=]() {
         ButtonPressedReceived(sender, args);
+    });
+}
+
+void relaynodeSignals::RelayStateChanged(_In_ int32 interfaceMemberRelayId, _In_ byte interfaceMemberState)
+{
+    if (nullptr == m_busObject)
+    {
+        return;
+    }
+
+    size_t argCount = 2;
+    alljoyn_msgarg arguments = alljoyn_msgarg_array_create(argCount);
+    TypeConversionHelpers::SetAllJoynMessageArg(alljoyn_msgarg_array_element(arguments, 0), "i", interfaceMemberRelayId);
+    TypeConversionHelpers::SetAllJoynMessageArg(alljoyn_msgarg_array_element(arguments, 1), "y", interfaceMemberState);
+    
+    alljoyn_busobject_signal(
+        m_busObject, 
+        NULL,  // Generated code only supports broadcast signals.
+        m_sessionId,
+        m_memberRelayStateChanged,
+        arguments,
+        argCount, 
+        0, // A signal with a TTL of 0 will be sent to every member of the session, regardless of how long it takes to deliver the message
+        ALLJOYN_MESSAGE_FLAG_GLOBAL_BROADCAST, // Broadcast to everyone in the session.
+        NULL); // The generated code does not need the generated signal message
+
+    alljoyn_msgarg_destroy(arguments);
+}
+
+void relaynodeSignals::CallRelayStateChangedReceived(_In_ relaynodeSignals^ sender, _In_ relaynodeRelayStateChangedReceivedEventArgs^ args)
+{
+    AllJoynHelpers::DispatchEvent([=]() {
+        RelayStateChangedReceived(sender, args);
     });
 }
 

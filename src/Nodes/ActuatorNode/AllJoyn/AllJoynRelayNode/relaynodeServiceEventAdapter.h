@@ -31,6 +31,7 @@ public ref class relaynodeServiceEventAdapter sealed : [Windows::Foundation::Met
 public:
     // Method Invocation Events
     event Windows::Foundation::TypedEventHandler<relaynodeServiceEventAdapter^, relaynodeSetStateCalledEventArgs^>^ SetStateCalled;
+    event Windows::Foundation::TypedEventHandler<relaynodeServiceEventAdapter^, relaynodeGetStateCalledEventArgs^>^ GetStateCalled;
 
     // Property Read Events
     
@@ -38,6 +39,7 @@ public:
 
     // IrelaynodeService Implementation
     virtual Windows::Foundation::IAsyncOperation<relaynodeSetStateResult^>^ SetStateAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ int32 interfaceMemberRelayId, _In_ byte interfaceMemberState);
+    virtual Windows::Foundation::IAsyncOperation<relaynodeGetStateResult^>^ GetStateAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ int32 interfaceMemberRelayId);
 
 
 };

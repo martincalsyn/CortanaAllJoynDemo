@@ -54,6 +54,43 @@ private:
     int32 m_status;
 };
 
+public ref class relaynodeGetStateResult sealed
+{
+public:
+    property int32 Status
+    {
+        int32 get() { return m_status; }
+    internal:
+        void set(_In_ int32 value) { m_status = value; }
+    }
+
+    property byte State
+    {
+        byte get() { return m_interfaceMemberState; }
+    internal:
+        void set(_In_ byte value) { m_interfaceMemberState = value; }
+    }
+    
+    static relaynodeGetStateResult^ CreateSuccessResult(_In_ byte interfaceMemberState)
+    {
+        auto result = ref new relaynodeGetStateResult();
+        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->State = interfaceMemberState;
+        return result;
+    }
+    
+    static relaynodeGetStateResult^ CreateFailureResult(_In_ int32 status)
+    {
+        auto result = ref new relaynodeGetStateResult();
+        result->Status = status;
+        return result;
+    }
+
+private:
+    int32 m_status;
+    byte m_interfaceMemberState;
+};
+
 public ref class relaynodeJoinSessionResult sealed
 {
 public:

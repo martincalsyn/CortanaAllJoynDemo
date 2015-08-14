@@ -7,28 +7,17 @@
       <arg name="relayId" type="i" direction="in"/>
       <arg name="state" type="y" direction="in"/>
     </method>
+    <method name="GetState">
+      <arg name="relayId" type="i" direction="in"/>
+      <arg name="state" type="y" direction="out"/>
+    </method>
     <signal name="ButtonPressed" sessless="true">
       <description>Emitted when the node's button has been pressed</description>
-    </signal>  
+    </signal>
+    <signal name="RelayStateChanged" sessless="true">
+      <description>Emitted when the relay state changes</description>
+      <arg name="relayId" type="i" />
+      <arg name="state" type="y" />
+    </signal>
   </interface>
-  <node>
-    <interface name="digital.pervasive.sample.relaynode.relay0">
-      <method name="SetState">
-        <arg name="state" type="y" direction="in"/>
-      </method>
-      <signal name="RelayState" sessless="true">
-        <description>Emitted when the relay state changes</description>
-      </signal>
-    </interface>
-  </node>
-  <node>
-    <interface name="digital.pervasive.sample.relaynode.relay1">
-      <method name="SetState">
-        <arg name="state" type="y" direction="in"/>
-      </method>
-      <signal name="RelayState" sessless="true">
-        <description>Emitted when the relay state changes</description>
-      </signal>
-    </interface>
-  </node>
 </node>

@@ -28,6 +28,7 @@ ref class relaynodeSignals;
 public interface class IrelaynodeSignals
 {
     event Windows::Foundation::TypedEventHandler<relaynodeSignals^, relaynodeButtonPressedReceivedEventArgs^>^ ButtonPressedReceived;
+    event Windows::Foundation::TypedEventHandler<relaynodeSignals^, relaynodeRelayStateChangedReceivedEventArgs^>^ RelayStateChangedReceived;
 };
 
 public ref class relaynodeSignals sealed : [Windows::Foundation::Metadata::Default] IrelaynodeSignals
@@ -39,15 +40,23 @@ public:
     // This event fires whenever the ButtonPressed signal is sent by another member of the session.
     virtual event Windows::Foundation::TypedEventHandler<relaynodeSignals^, relaynodeButtonPressedReceivedEventArgs^>^ ButtonPressedReceived;
 
+    // Calling this method will send the RelayStateChanged signal to every member of the session.
+    void RelayStateChanged(_In_ int32 interfaceMemberRelayId, _In_ byte interfaceMemberState);
+
+    // This event fires whenever the RelayStateChanged signal is sent by another member of the session.
+    virtual event Windows::Foundation::TypedEventHandler<relaynodeSignals^, relaynodeRelayStateChangedReceivedEventArgs^>^ RelayStateChangedReceived;
+
 internal:
     void Initialize(_In_ alljoyn_busobject busObject, _In_ alljoyn_sessionid sessionId);
     void CallButtonPressedReceived(_In_ relaynodeSignals^ sender, _In_ relaynodeButtonPressedReceivedEventArgs^ args);
+    void CallRelayStateChangedReceived(_In_ relaynodeSignals^ sender, _In_ relaynodeRelayStateChangedReceivedEventArgs^ args);
 
 private:
     alljoyn_busobject m_busObject;
     alljoyn_sessionid m_sessionId;
 
     alljoyn_interfacedescription_member m_memberButtonPressed;
+    alljoyn_interfacedescription_member m_memberRelayStateChanged;
 };
 
 } } } } 

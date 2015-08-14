@@ -127,7 +127,9 @@ internal:
 
 private:
     static void CallSetStateHandler(_Inout_ alljoyn_busobject busObject, _In_ alljoyn_message message);
+    static void CallGetStateHandler(_Inout_ alljoyn_busobject busObject, _In_ alljoyn_message message);
     static void CallButtonPressedSignalHandler(_In_ const alljoyn_interfacedescription_member* member, _In_ alljoyn_message message);
+    static void CallRelayStateChangedSignalHandler(_In_ const alljoyn_interfacedescription_member* member, _In_ alljoyn_message message);
       
     // Register a callback function to handle methods.
     QStatus AddMethodHandler(_In_ alljoyn_interfacedescription interfaceDescription, _In_ PCSTR methodName, _In_ alljoyn_messagereceiver_methodhandler_ptr handler);

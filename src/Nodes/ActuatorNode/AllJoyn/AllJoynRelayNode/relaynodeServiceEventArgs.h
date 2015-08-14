@@ -77,6 +77,53 @@ private:
     byte m_interfaceMemberState;
 };
 
+public ref class relaynodeGetStateCalledEventArgs sealed
+{
+public:
+    relaynodeGetStateCalledEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ int32 interfaceMemberRelayId);
+
+    property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
+    {
+        Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
+    }
+
+    property relaynodeGetStateResult^ Result
+    {
+        relaynodeGetStateResult^ get() { return m_result; }
+        void set(_In_ relaynodeGetStateResult^ value) { m_result = value; }
+    }
+
+    property int32 RelayId
+    {
+        int32 get() { return m_interfaceMemberRelayId; }
+    }
+
+    Windows::Foundation::Deferral^ GetDeferral();
+
+    static Windows::Foundation::IAsyncOperation<relaynodeGetStateResult^>^ GetResultAsync(relaynodeGetStateCalledEventArgs^ args)
+    {
+        args->InvokeAllFinished();
+        auto t = concurrency::create_task(args->m_tce);
+        return concurrency::create_async([t]() -> concurrency::task<relaynodeGetStateResult^>
+        {
+            return t;
+        });
+    }
+    
+private:
+    void Complete();
+    void InvokeAllFinished();
+    void InvokeCompleteHandler();
+
+    bool m_raised;
+    int m_completionsRequired;
+    concurrency::task_completion_event<relaynodeGetStateResult^> m_tce;
+    std::mutex m_lock;
+    Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
+    relaynodeGetStateResult^ m_result;
+    int32 m_interfaceMemberRelayId;
+};
+
 // Readable Properties
 // Writable Properties
 } } } } 

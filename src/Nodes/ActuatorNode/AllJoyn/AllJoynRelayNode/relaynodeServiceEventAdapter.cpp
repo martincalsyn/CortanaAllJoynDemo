@@ -43,5 +43,14 @@ IAsyncOperation<relaynodeSetStateResult^>^ relaynodeServiceEventAdapter::SetStat
     return relaynodeSetStateCalledEventArgs::GetResultAsync(args);
 }
 
+IAsyncOperation<relaynodeGetStateResult^>^ relaynodeServiceEventAdapter::GetStateAsync(_In_ AllJoynMessageInfo^ info, _In_ int32 interfaceMemberRelayId)
+{
+    auto args = ref new relaynodeGetStateCalledEventArgs(info, interfaceMemberRelayId);
+    AllJoynHelpers::DispatchEvent([=]() {
+        GetStateCalled(this, args);
+    });
+    return relaynodeGetStateCalledEventArgs::GetResultAsync(args);
+}
+
 // Property Reads
 // Property Writes
