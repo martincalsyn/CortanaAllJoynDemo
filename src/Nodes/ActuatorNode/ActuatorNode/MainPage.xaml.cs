@@ -14,6 +14,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+using ajrelay = digital.pervasive.sample.relaynode;
+
 namespace ActuatorNode
 {
     /// <summary>

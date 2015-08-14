@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>228a5cec-9d6f-418c-9298-38d74c5dcbac</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="AllJoynBusObjectManager.cpp" />
+    <ClCompile Include="AllJoynHelpers.cpp" />
+    <ClCompile Include="relaynodeConsumer.cpp" />
+    <ClCompile Include="relaynodeProducer.cpp" />
+    <ClCompile Include="relaynodeServiceEventAdapter.cpp" />
+    <ClCompile Include="relaynodeServiceEventArgs.cpp" />
+    <ClCompile Include="relaynodeSignals.cpp" />
+    <ClCompile Include="relaynodeWatcher.cpp" />
+    <ClCompile Include="TypeConversionHelpers.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="AllJoynBusObjectManager.h" />
+    <ClInclude Include="AllJoynHelpers.h" />
+    <ClInclude Include="IrelaynodeService.h" />
+    <ClInclude Include="relaynodeConsumer.h" />
+    <ClInclude Include="relaynodeEventArgs.h" />
+    <ClInclude Include="relaynodeMethodResults.h" />
+    <ClInclude Include="relaynodeProducer.h" />
+    <ClInclude Include="relaynodeServiceEventAdapter.h" />
+    <ClInclude Include="relaynodeServiceEventArgs.h" />
+    <ClInclude Include="relaynodeSignals.h" />
+    <ClInclude Include="relaynodeStructures.h" />
+    <ClInclude Include="relaynodeWatcher.h" />
+    <ClInclude Include="TypeConversionHelpers.h" />
+  </ItemGroup>
+</Project>

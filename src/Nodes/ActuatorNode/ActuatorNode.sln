@@ -13,6 +13,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GHIElectronics.UAP.Gadgetee
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PervasiveDigital.UAP.Gadgeteer.Modules", "PervasiveDigital.UAP.Gadgeteer.Modules\PervasiveDigital.UAP.Gadgeteer.Modules.csproj", "{2FDF4FC1-55E5-40F0-859D-B4BA7D88E001}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AllJoyn", "AllJoyn", "{BE59D7E5-39EB-411D-9AE2-C116FA948E38}"
+	ProjectSection(SolutionItems) = preProject
+		AllJoyn\HowToGenerate.txt = AllJoyn\HowToGenerate.txt
+		AllJoyn\RelayNodeDefinition.xml = AllJoyn\RelayNodeDefinition.xml
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AllJoynRelayNode", "AllJoyn\AllJoynRelayNode\AllJoynRelayNode.vcxproj", "{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,8 +117,25 @@ Global
 		{2FDF4FC1-55E5-40F0-859D-B4BA7D88E001}.Release|x64.Build.0 = Release|x64
 		{2FDF4FC1-55E5-40F0-859D-B4BA7D88E001}.Release|x86.ActiveCfg = Release|x86
 		{2FDF4FC1-55E5-40F0-859D-B4BA7D88E001}.Release|x86.Build.0 = Release|x86
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Debug|ARM.ActiveCfg = Debug|ARM
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Debug|ARM.Build.0 = Debug|ARM
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Debug|x64.ActiveCfg = Debug|x64
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Debug|x64.Build.0 = Debug|x64
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Debug|x86.ActiveCfg = Debug|Win32
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Debug|x86.Build.0 = Debug|Win32
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Release|Any CPU.ActiveCfg = Release|Win32
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Release|ARM.ActiveCfg = Release|ARM
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Release|ARM.Build.0 = Release|ARM
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Release|x64.ActiveCfg = Release|x64
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Release|x64.Build.0 = Release|x64
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Release|x86.ActiveCfg = Release|Win32
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{05FE9B53-D62C-4372-9DAD-564A8C6AF4BC} = {BE59D7E5-39EB-411D-9AE2-C116FA948E38}
 	EndGlobalSection
 EndGlobal

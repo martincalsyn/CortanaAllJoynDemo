@@ -1,0 +1,6 @@
+To generate the generated files, do:
+
+Open command window
+path %path%;"C:\Program Files (x86)\Windows Kits\10\bin\x64"
+cd /d {your project root}\CortanaAllJoynDemo\src\Nodes\ActuatorNode\AllJoyn
+alljoyncodegenerator -i RelayNodeDefinition.xml -o GeneratedFiles

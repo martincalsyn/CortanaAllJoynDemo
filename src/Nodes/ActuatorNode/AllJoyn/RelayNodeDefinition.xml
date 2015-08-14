@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<node name="/digital/pervasive/sample/relaynode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="http://www.allseenalliance.org/schemas/introspect.xsd">
+  <interface name="digital.pervasive.sample.relaynode">
+    <description>Provides control over a relay</description>
+    <method name="SetState">
+      <arg name="relayId" type="i" direction="in"/>
+      <arg name="state" type="y" direction="in"/>
+    </method>
+    <signal name="ButtonPressed" sessless="true">
+      <description>Emitted when the node's button has been pressed</description>
+    </signal>  
+  </interface>
+  <node>
+    <interface name="digital.pervasive.sample.relaynode.relay0">
+      <method name="SetState">
+        <arg name="state" type="y" direction="in"/>
+      </method>
+      <signal name="RelayState" sessless="true">
+        <description>Emitted when the relay state changes</description>
+      </signal>
+    </interface>
+  </node>
+  <node>
+    <interface name="digital.pervasive.sample.relaynode.relay1">
+      <method name="SetState">
+        <arg name="state" type="y" direction="in"/>
+      </method>
+      <signal name="RelayState" sessless="true">
+        <description>Emitted when the relay state changes</description>
+      </signal>
+    </interface>
+  </node>
+</node>

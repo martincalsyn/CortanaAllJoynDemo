@@ -149,6 +149,10 @@
       <Project>{e5b6ae8e-39ce-4605-afdd-30c7fabab052}</Project>
       <Name>GHIElectronics.UAP.Gadgeteer.Modules</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AllJoyn\AllJoynRelayNode\AllJoynRelayNode.vcxproj">
+      <Project>{05fe9b53-d62c-4372-9dad-564a8c6af4bc}</Project>
+      <Name>AllJoynRelayNode</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PervasiveDigital.UAP.Gadgeteer.Modules\PervasiveDigital.UAP.Gadgeteer.Modules.csproj">
       <Project>{2fdf4fc1-55e5-40f0-859d-b4ba7d88e001}</Project>
       <Name>PervasiveDigital.UAP.Gadgeteer.Modules</Name>
