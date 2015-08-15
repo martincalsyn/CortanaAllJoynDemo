@@ -20,8 +20,6 @@ namespace CortanaBackgroundTask
 
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            var client = this.Client;
-
             serviceDeferral = taskInstance.GetDeferral();
             taskInstance.Canceled += OnTaskCancelled;
 
@@ -38,6 +36,8 @@ namespace CortanaBackgroundTask
                     voiceServiceConnection.VoiceCommandCompleted += OnVoiceCommandCompleted;
 
                     VoiceCommand voiceCommand = await voiceServiceConnection.GetVoiceCommandAsync();
+
+                    var client = await this.GetClient();
 
                     // Depending on the operation (defined in the VoiceCommands.xml file)
                     // perform the appropriate command.
@@ -106,7 +106,7 @@ namespace CortanaBackgroundTask
                 {
                     client.SetRelay(relayId, false);
                     string turnedOn = string.Format(
-                                           cortanaResourceMap.GetValue("turnedOnMessage", cortanaContext).ValueAsString,
+                                           cortanaResourceMap.GetValue("turnedOffMessage", cortanaContext).ValueAsString,
                                            target);
                     userMessage.DisplayMessage = turnedOn;
                     userMessage.SpokenMessage = turnedOn;
@@ -135,16 +135,21 @@ namespace CortanaBackgroundTask
         }
 
         private RelayNodeClient _client;
-        private RelayNodeClient Client
+        private async Task<RelayNodeClient> GetClient()
         {
-            get
+            if (_client==null)
             {
-                if (_client==null)
-                {
-                    _client = new RelayNodeClient();
-                }
-                return _client;
+                _client = new RelayNodeClient();
             }
+            int iRetries = 20;
+            while (!_client.IsReady)
+            {
+                await Task.Delay(250);
+                if (--iRetries == 0)
+                    break;
+            }
+
+            return _client;
         }
     }
 }
