@@ -1,3 +1,3 @@
 [submodule "src/nodes/External/ghi/windows-iot"]
-	path = src/nodes/External/ghi/windows-iot
+	path = src/Nodes/External/ghi/windows-iot
 	url = https://mcalsyn@bitbucket.org/ghi_elect/windows-iot.git
